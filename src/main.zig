@@ -34,7 +34,14 @@ pub fn main() !void {
     // If X*X + Y*Y <= 1 then increment counter for in circle point
     var i: u16 = 0;
     var in_circle: u16 = 0;
-    const rand = std.crypto.random;
+
+    var prng = std.rand.DefaultPrng.init(blk: {
+        var seed: u64 = undefined;
+        try std.os.getrandom(std.mem.asBytes(&seed));
+        break :blk seed;
+    });
+    const rand = prng.random();
+
     while(i < iterations) {
         const x = rand.float(f32);
         const y = rand.float(f32);
